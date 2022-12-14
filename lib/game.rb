@@ -56,6 +56,7 @@ class Game
     end
 
 end
+<<<<<<< HEAD
 
 class Player
     def initialize
@@ -72,3 +73,5 @@ end
 class ComputerPlayer < Player
 
 end
+=======
+>>>>>>> 025bfaf7c3d62e85a6864f999e16e43fa775dde3
