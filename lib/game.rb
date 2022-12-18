@@ -12,66 +12,64 @@
 
 # need to keep track of rounds of play, so after 12 guesses the game is over
 
-#
-
+require_relative 'human_player'
+require_relative 'computer_player'
 
 class Game
     def initialize
-      @round = 1
-      @selection_pool = ["red", "green", "blue", "yellow", "purple", "cyan"]
+        @round = 1
+        @selection_pool = ["red", "green", "blue", "yellow", "purple", "cyan"]
+        @code = []
+        @players = []
+        @current_player = nil
     end
 
-    def check_code
-        puts game_code
-        color = gets.chomp
-        @code.any?(color) 
+    def setup
+        # call others methods like welcome, display_board, player_creation, number of even rounds to play
+        welcome_message
+        create_players
+        assign_code
+        breaker_message
     end
+
+    def welcome_message
+        puts "Welcome to Mastermind!\nYou will be competing against the computer to make and break codes!"
+        puts "If you are not familiar with the rules of Mastermind,"
+        puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)"
+    end
+
+    def breaker_message
+        puts "Alright, #{@current_player.name}, the code has been chosen."
+        puts "You have 12 turns to break the code!"
+    end
+
+    def create_players
+        @players << HumanPlayer.create_player
+        @players << ComputerPlayer.new("Computer")
+        @current_player = @players[0]
+    end
+
+    # def check_code
+    #   puts game_code
+    #   color = gets.chomp
+    #   @code.any?(color) 
+    # end
+
+    def game_loop
+        
+    end
+
 
     def set_code
     end
 
-    private
-    attr_reader :code
-    def game_code
-        @code = []
+    # private
+    attr_reader :code, :selection_pool, :players
+    def assign_code
         4.times { @code.push(@selection_pool.sample) }
     end
-
 end
 
-class Game
-    def initialize
-      @round = 1
-      @selection_pool = ["red", "green", "blue", "yellow", "purple", "cyan"]
-    end
+game = Game.new
 
-    def check_code
-        color = gets.chomp
-        @code.any?(color) 
-    end
-    
-    def game_code
-        @code = []
-        4.times { @code.push(@selection_pool.sample) }
-    end
-
-end
-<<<<<<< HEAD
-
-class Player
-    def initialize
-    end
-
-    def guess
-    end
-end
-
-class HumanPlayer < Player
-
-end
-
-class ComputerPlayer < Player
-
-end
-=======
->>>>>>> 025bfaf7c3d62e85a6864f999e16e43fa775dde3
+game.setup
