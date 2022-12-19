@@ -16,58 +16,62 @@ require_relative 'human_player'
 require_relative 'computer_player'
 
 class Game
-    def initialize
-        @round = 1
-        @selection_pool = ["red", "green", "blue", "yellow", "purple", "cyan"]
-        @code = []
-        @players = []
-        @current_player = nil
-    end
+  COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
+  def initialize
+    @code = []
+    @players = []
+    @current_player = nil
+    @current_guess = nil
+  end
 
-    def setup
-        # call others methods like welcome, display_board, player_creation, number of even rounds to play
-        welcome_message
-        create_players
-        assign_code
-        breaker_message
-    end
+  def setup
+    # call others methods like welcome, display_board, player_creation, number of even rounds to play
+    welcome_message
+    create_players
+    assign_code
+    breaker_message
+  end
 
-    def welcome_message
-        puts "Welcome to Mastermind!\nYou will be competing against the computer to make and break codes!"
-        puts "If you are not familiar with the rules of Mastermind,"
-        puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)"
-    end
+  def play
+      
+  end
 
-    def breaker_message
-        puts "Alright, #{@current_player.name}, the code has been chosen."
-        puts "You have 12 turns to break the code!"
-    end
+  def welcome_message
+    puts "Welcome to Mastermind!\nYou will be competing against the computer to make and break codes!"
+    puts "If you are not familiar with the rules of Mastermind,"
+    puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)"
+  end
 
-    def create_players
-        @players << HumanPlayer.create_player
-        @players << ComputerPlayer.new("Computer")
-        @current_player = @players[0]
-    end
+  def breaker_message
+    puts "Alright, #{@current_player.name}, the code has been chosen."
+    puts "You have 12 turns to break the code!"
+  end
 
-    # def check_code
-    #   puts game_code
-    #   color = gets.chomp
-    #   @code.any?(color) 
-    # end
+  def create_players
+    @players << HumanPlayer.create_player
+    @players << ComputerPlayer.new("Computer")
+    @current_player = @players[0]
+  end
 
-    def game_loop
-        
-    end
+  # def check_code
+  #   puts game_code
+  #   color = gets.chomp
+  #   @code.any?(color) 
+  # end
+
+  def game_loop
+      
+  end
 
 
-    def set_code
-    end
+  def set_code
+  end
 
-    # private
-    attr_reader :code, :selection_pool, :players
-    def assign_code
-        4.times { @code.push(@selection_pool.sample) }
-    end
+  # private
+  attr_reader :code, :selection_pool, :players
+  def assign_code
+    4.times { @code.push(@selection_pool.sample) }
+  end
 end
 
 game = Game.new
