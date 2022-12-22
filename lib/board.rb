@@ -7,6 +7,6 @@ class Board
   end
 
   def display_board
-    @board.each {|guess_array| p guess_array}
+    @board.each {|guess_array| p "#{guess_array[0]} | #{guess_array[1]} | #{guess_array[2]} | #{guess_array[3]} |"}
   end
 end

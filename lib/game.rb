@@ -11,7 +11,7 @@
 # correct position (use .any?)
 
 # need to keep track of rounds of play, so after 12 guesses the game is over
-
+require 'pry-byebug'
 require_relative 'human_player'
 require_relative 'computer_player'
 require_relative 'board'
@@ -23,11 +23,9 @@ class Game
     @code = []
     @players = []
     @current_player = nil
-    @current_guess = nil
   end
 
   def setup
-    # call others methods like welcome, display_board, player_creation, number of even rounds to play
     welcome_message
     create_players
     assign_code
@@ -72,6 +70,8 @@ class Game
     12.times do
       @current_player.place_guess
       push_guess(@current_player.guess)
+      binding.pry
+      break end_game if game_won?
       @current_player.clear_guess
       @board.display_board
     end
@@ -81,8 +81,16 @@ class Game
   def set_code
   end
 
+  def game_won?
+    @current_player.guess == @code
+  end
+
+  def end_game
+    puts "You have guessed the code! YOU are the Mastermind!"
+  end
+
   # private
-  attr_reader :code, :selection_pool, :players
+  attr_reader :code, :players
   def assign_code
     4.times { @code.push(COLOR_OPTIONS.sample) }
   end
