@@ -18,7 +18,7 @@ class HumanPlayer < Player
   end
 
   def place_guess
-    puts "#{@name} Please make your four color guess separated by spaces with no punctuation:"
+    puts "#{@name} Please make your four color guess, separated by spaces with no punctuation:"
     @guess = gets.chomp.downcase.split
     until guess_valid?(guess)
       puts "Invalid guess, please select a valid guess:"
@@ -30,6 +30,9 @@ class HumanPlayer < Player
   def guess_valid?(guess)
     guess.all? { |color| COLOR_OPTIONS.any?(color) }
   end
+
+  def clear_guess
+    @guess = nil
+  end
 end
 
-jacob = HumanPlayer.new("Jacob").place_guess
