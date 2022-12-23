@@ -1,16 +1,5 @@
-# need to create a game board
+# move push_guess and populate_matches_array to board class
 
-# need to make an array of colors the computer can select from
-    # for each item in that array, have the computer randomly select
-    # a color from it. (use .sample(4))
-
-# need a way for the player to guess the code
-
-# need something that keeps track of whether a guess is in the correct position,
-# with the correct color, or whether there is a correct color, but not in the
-# correct position (use .any?)
-
-# need to keep track of rounds of play, so after 12 guesses the game is over
 require 'pry-byebug'
 require_relative 'human_player'
 require_relative 'computer_player'
@@ -23,6 +12,8 @@ class Game
     @code = []
     @players = []
     @current_player = nil
+    @exact_matches = 0
+    @partial_matches = 0
   end
 
   def setup
@@ -56,29 +47,32 @@ class Game
     @current_player = @players[0]
   end
 
-  def push_guess(guess)
-    @board.board.push(guess)
+  def assign_matches
+    @current_player.guess.each_with_index do |color, index|
+      if @current_player.guess[index] == @code[index]
+        @exact_matches += 1
+      elsif code.any?(color)
+        @partial_matches += 1
+      end
+    end
   end
-
-  # def check_code
-  #   puts game_code
-  #   color = gets.chomp
-  #   @code.any?(color) 
-  # end
 
   def game_loop
     12.times do
       @current_player.place_guess
-      push_guess(@current_player.guess)
-      binding.pry
+      @board.push_guess(@current_player.guess)
+      assign_matches
+      @board.populate_matches_array(@exact_matches, @partial_matches)
       break end_game if game_won?
       @current_player.clear_guess
+      clear_matches
       @board.display_board
     end
   end
 
-
-  def set_code
+  def clear_matches
+    @exact_matches = 0
+    @partial_matches = 0
   end
 
   def game_won?
