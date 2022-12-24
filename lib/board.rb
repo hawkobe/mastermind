@@ -7,9 +7,10 @@ class Board
   end
 
   def display_board
+    puts "Here's a history of your previous guesses:"
     @board.each_with_index do |guess_array, index| 
-      print "#{guess_array[0]} | #{guess_array[1]} | #{guess_array[2]} | #{guess_array[3]} |"
-      puts " Exact matches: #{@matches[index][0]}. Partial Matches: #{@matches[index][1]}"
+      print "Guess #{index + 1}: #{guess_array[0]} | #{guess_array[1]} | #{guess_array[2]} | #{guess_array[3]} |"
+      puts " Exact matches: #{@matches[index][0]} ** Partial Matches: #{@matches[index][1]}"
     end
   end
 
