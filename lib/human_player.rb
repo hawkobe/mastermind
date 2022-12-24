@@ -18,7 +18,7 @@ class HumanPlayer < Player
   end
 
   def place_guess
-    puts "#{@name} Please make your four color guess, separated by spaces with no punctuation:"
+    puts "Time to guess! Your guess should be four colors, separated by spaces, with no punctuation:"
     @guess = gets.chomp.downcase.split
     until guess_valid?(guess)
       puts "Invalid guess, please select a valid guess:"
