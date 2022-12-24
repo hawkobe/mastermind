@@ -32,11 +32,11 @@ class Game
   def welcome_message
     puts "Welcome to Mastermind!\nYou will be competing against the computer to make and break codes!"
     puts "If you are not familiar with the rules of Mastermind,"
-    puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)"
+    puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)\n"
   end
 
   def breaker_message
-    puts "Alright, #{@current_player.name}, the code has been chosen."
+    puts "Alright, the code has been chosen."
     puts "You have 12 turns to break the code!"
     puts "Please select your guess from the colors: Red, Green, Blue, Yellow, Purple, and Cyan"
   end
@@ -46,13 +46,17 @@ class Game
     @players << ComputerPlayer.new("Computer")
     @current_player = @players[0]
   end
-
+  
   def assign_matches
+    matched = []
+    partially_matched = []
     @current_player.guess.each_with_index do |color, index|
       if @current_player.guess[index] == @code[index]
         @exact_matches += 1
-      elsif code.any?(color)
+        matched.push(color)
+      elsif code.any?(color) && matched.count(color) != @code.count(color) && partially_matched.count(color) != @code.count(color)
         @partial_matches += 1
+        partially_matched.push(color)
       end
     end
   end
