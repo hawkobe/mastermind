@@ -1,5 +1,4 @@
 require_relative 'player'
-
 # need to create a history of guesses, which is essentially the board
 
 class HumanPlayer < Player
