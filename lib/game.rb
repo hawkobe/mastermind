@@ -58,6 +58,11 @@ class Game
         @partial_matches += 1
         partially_matched.push(color)
       end
+
+      if (matched.count(color) == partially_matched.count(color)) && ((matched.count(color) + partially_matched.count(color)) > code.count(color))
+        @partial_matches -= 1
+      end
+      binding.pry
     end
   end
 
