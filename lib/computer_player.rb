@@ -1,50 +1,94 @@
 require_relative 'player'
+require 'pry-byebug'
 
 class ComputerPlayer < Player
+  COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
+
+  attr_reader :matches, :guess
   def initialize(name)
     super
-    @match_array = []
-  end
-  
-  def determine_possible_combinations
-    possible_combos = COLOR_OPTIONS.repeated_permutation(4).to_a
+    @possible_combos = COLOR_OPTIONS.repeated_permutation(4).to_a
+    @matches = [0, 0]
+    @code = []
+    @new_possibles = []
+    @guess = nil
   end
 
-  def comp_assign_matches
+  def assign_matches(player, match_array, code_to_check)
     matched = []
     partially_matched = []
-    @current_player.guess.each_with_index do |color, index|
-      if @current_player.guess[index] == @code[index]
-        @match_array[0] += 1
+    player.guess.each_with_index do |color, index|
+      if player.guess[index] == code_to_check[index]
+        match_array[0] += 1
         matched.push(color)
-      elsif code.any?(color) && matched.count(color) != @code.count(color) && partially_matched.count(color) != @code.count(color)
-        @match_array[1] += 1
+      elsif code_to_check.any?(color) && matched.count(color) != code_to_check.count(color) && partially_matched.count(color) != code_to_check.count(color)
+        match_array[1] += 1
         partially_matched.push(color)
+      end
+
+      if (matched.count(color) == partially_matched.count(color)) && ((matched.count(color) + partially_matched.count(color)) > code_to_check.count(color))
+        match_array[1] -= 1
       end
     end
   end
-  # red = 1 green = 2 blue = 3 yellow = 4 purple = 5 cyan = 6
 
-  # need to write algorithm that lets computer make educated guesses.
-  # thinking along the lines of:
-  
-  # if only partials and no exact matches:
-  # use number of partials to determine "n"
-  # new_possibles = possible_combos.select do |array| 
-  #                   (array.count("red") <= n && array[0] != "red" && array[1] != "red") && (array.count("green") <= n && array[2] != "green" && array[3] != "green"
+  def computer_guess
+    @new_possibles = @possible_combos.select do |combo|
+      current_matches = [0, 0]
+      assign_matches(self, current_matches, combo)
+      # binding.pry
+      # matched = []
+      # partially_matched = []
+      # @guess.each_with_index do |color, index|
+      #   if @guess[index] == combo[index]
+      #     current_matches[0] += 1
+      #     matched.push(color)
+      #   elsif combo.any?(color) && matched.count(color) != combo.count(color) && partially_matched.count(color) != combo.count(color)
+      #     current_matches[1] += 1
+      #     partially_matched.push(color)
+      #   end
 
-  
-  # based on first guess being "red red green green"
+      #   if (matched.count(color) == partially_matched.count(color)) && ((matched.count(color) + partially_matched.count(color)) > combo.count(color))
+      #     current_matches[1] -= 1
+      #   end
+      # end
+      current_matches == @matches
+    end
+    @possible_combos = @new_possibles
+  end
 
-  # for the next guess, will want computer to guess the lowest possible guess
-  # from new possibles (e.g. [2, 3, 4, 5] over [3, 4, 5, 6])
+  def clear_matches
+    @matches = [0, 0]
+  end
 
-  # possible outcomes of initial r r g g guess:
-  # 1: four exact matches (win, so don't have to include)
-  # 2: zero exact matches zero partials (eliminate those colors entirely from new possibles code)
-  # 3: zero exact matches and 1 partial (if no exact, then -> [line 17])
-  # 4: zero exact matches and 2 partial (if no exact, then -> [line 17])
-  # 5: zero exact matches and 3 partial (if no exact, then -> [line 17])
-  # 6: zero exact matches and 4 partial (if no exact, then -> [line 17])
-  # 7: lkj
+  def assign_code
+    @code = COLOR_OPTIONS.sample(4)
+  end
+
+  def game_won?(player)
+    player.guess == @code
+  end
+
+  def make_guess
+    @new_possibles.empty? ? @guess = %w[red red green green] : @guess = @new_possibles.sample
+  end
+
+  def game_loop
+    assign_code
+    guess_number = 1
+    until game_won?(self)
+      make_guess
+      assign_matches(self, @matches, @code)
+      # binding.pry
+      computer_guess
+      puts "Code: #{@code}"
+      puts "Guess #{guess_number}: #{@guess}"
+      clear_matches
+      guess_number += 1
+    end
+  end
 end
+
+computer = ComputerPlayer.new("computer")
+
+computer.game_loop
