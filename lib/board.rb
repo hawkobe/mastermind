@@ -14,8 +14,8 @@ class Board
     end
   end
 
-  def populate_matches_array(exact, partial)
-    @matches.push([exact, partial])
+  def populate_matches_array(match_array)
+    @matches.push(match_array)
   end
 
   def push_guess(guess)
