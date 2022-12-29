@@ -1,6 +1,3 @@
-# move push_guess and populate_matches_array to board class
-
-require 'pry-byebug'
 require_relative 'human_player'
 require_relative 'computer_player'
 require_relative 'board'
