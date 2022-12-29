@@ -11,19 +11,40 @@ class Game
     @board = Board.new
     @human = nil
     @computer = nil
-    @current_player = nil
+    @guess_or_create = nil
   end
 
   def setup
     welcome_message
     create_players
-    @computer.assign_code
-    breaker_message
+    choose_guess_or_create
   end
 
   def play
     setup
-    player_guess_loop
+    if @guess_or_create == "guess"
+      breaker_message
+      player_guess_loop
+    else
+      creator_message
+      computer_guess_loop
+    end
+  end
+
+  def choose_guess_or_create
+    puts "Now decide whether you would like to guess the code or create the code."
+    puts "Type 'guess' to guess or 'code' to create the code:"
+    answer = gets.chomp
+    until answer_valid?(answer)
+      puts "Invalid input. Remember, type 'guess' to guess or 'code' to create the code"
+      answer = gets.chomp
+    end
+    puts "Great! You've chosen to #{answer}. Let's begin!"
+    @guess_or_create = answer
+  end
+
+  def answer_valid?(response)
+    response == "guess" || response == "code"
   end
 
   def welcome_message
@@ -33,27 +54,49 @@ class Game
   end
 
   def breaker_message
-    puts "Alright, the code has been chosen."
+    puts "Alright, the computer will choose the code."
     puts "You have 12 turns to break the code!"
-    puts "Please select your guess from the colors: Red, Green, Blue, Yellow, Purple, and Cyan"
+  end
+
+  def creator_message
+    puts "The computer will have 12 turns to break the code."
+  end
+
+  def display_matches
+    puts "You got #{@computer.matches[0]} Exact Matches"
+    puts "You got #{@computer.matches[1]} Partial Matches"
   end
 
   def create_players
     @human = HumanPlayer.create_player
     @computer = ComputerPlayer.new("Computer")
-    @current_player = @human
   end
 
   def player_guess_loop
+    @computer.assign_code
     12.times do
-      @current_player.place_guess
-      @board.push_guess(@current_player.guess)
-      @computer.assign_matches(@human)
+      @human.place_guess
+      @board.push_guess(@human.guess)
+      @computer.assign_matches(@human, @computer.matches, @computer.code)
+      display_matches
       @board.populate_matches_array(@computer.matches)
-      break end_game if @computer.game_won?(@human)
-      @current_player.clear_guess
+      break end_game if @computer.game_won?(@human, @computer)
+      @human.clear_guess
       @computer.clear_matches
       @board.display_board
+    end
+  end
+
+  def computer_guess_loop
+    @human.assign_code
+    guess_number = 1
+    until @computer.game_won?(@computer, @human)
+      @computer.make_guess
+      @computer.assign_matches(@computer, @computer.matches, @human.code)
+      @computer.remove__possible_codes
+      puts "Guess #{guess_number}: #{@computer.guess}"
+      @computer.clear_matches
+      guess_number += 1
     end
   end
 
