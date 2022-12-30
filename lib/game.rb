@@ -1,6 +1,7 @@
 require_relative 'human_player'
 require_relative 'computer_player'
 require_relative 'board'
+require 'pry-byebug'
 
 class Game
   COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
@@ -9,6 +10,7 @@ class Game
     @human = nil
     @computer = nil
     @guess_or_create = nil
+    @code = nil
   end
 
   def setup
@@ -21,9 +23,11 @@ class Game
     setup
     if @guess_or_create == "guess"
       breaker_message
+      @code = @computer.assign_code
       player_guess_loop
     else
       creator_message
+      @code = @human.assign_code
       computer_guess_loop
     end
   end
@@ -60,8 +64,8 @@ class Game
   end
 
   def display_matches
-    puts "You got #{@computer.matches[0]} Exact Matches"
-    puts "You got #{@computer.matches[1]} Partial Matches"
+    puts "There were #{@computer.matches[0]} Exact Matches"
+    puts "There were #{@computer.matches[1]} Partial Matches"
   end
 
   def create_players
@@ -70,14 +74,13 @@ class Game
   end
 
   def player_guess_loop
-    @computer.assign_code
     12.times do
       @human.place_guess
       @board.push_guess(@human.guess)
-      @computer.assign_matches(@human, @computer.matches, @computer.code)
+      @computer.assign_matches(@human, @computer.matches, @code)
       display_matches
       @board.populate_matches_array(@computer.matches)
-      break end_game if @computer.game_won?(@human, @computer)
+      break end_game if @computer.game_won?(@human, @code)
       @human.clear_guess
       @computer.clear_matches
       @board.display_board
@@ -85,13 +88,15 @@ class Game
   end
 
   def computer_guess_loop
-    @human.assign_code
     guess_number = 1
-    until @computer.game_won?(@computer, @human)
+    until @computer.game_won?(@computer, @code)
+      print "Guess number #{guess_number}: "
       @computer.make_guess
-      @computer.assign_matches(@computer, @computer.matches, @human.code)
-      @computer.remove__possible_codes
-      puts "Guess #{guess_number}: #{@computer.guess}"
+      @board.push_guess(@computer.guess)
+      @computer.assign_matches(@computer, @computer.matches, @code)
+      display_matches
+      @board.populate_matches_array(@computer.matches)
+      @computer.remove_possible_codes
       @computer.clear_matches
       guess_number += 1
     end

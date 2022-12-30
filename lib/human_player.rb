@@ -2,11 +2,10 @@ require_relative 'player'
 
 class HumanPlayer < Player
   COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
-  attr_reader :name, :guess, :code
+  attr_reader :name, :guess
   def initialize(name)
     super
     @guess = nil
-    @code = nil
   end
 
   def self.create_player
@@ -42,13 +41,14 @@ class HumanPlayer < Player
   def assign_code
     puts "Please select your code from the colors: Red, Green, Blue, Yellow, Purple, and Cyan"
     puts "Your code should be four colors, separated by spaces, with no punctuation:"
-    @code = gets.chomp.downcase.split
-    until code_valid?(@code)
+    code = gets.chomp.downcase.split
+    until code_valid?(code)
       puts "Invalid selection, please select a valid code:"
-      @code = gets.chomp.downcase.split
+      code = gets.chomp.downcase.split
     end
-    puts "Your secret code is : | #{@code[0]} | #{@code[1]} | #{@code[2]} | #{@code[3]} |"
+    puts "Your secret code is : | #{code[0]} | #{code[1]} | #{code[2]} | #{code[3]} |"
     puts "Don't tell the computer! :P"
+    code
   end
 end
 

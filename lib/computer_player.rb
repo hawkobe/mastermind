@@ -4,13 +4,11 @@ require 'pry-byebug'
 class ComputerPlayer < Player
   COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
 
-  attr_reader :guess, :code
-  attr_accessor :matches
+  attr_reader :guess, :matches
   def initialize(name)
     super
     @possible_combos = COLOR_OPTIONS.repeated_permutation(4).to_a
     @matches = [0, 0]
-    @code = []
     @new_possibles = []
     @guess = nil
   end
@@ -47,28 +45,15 @@ class ComputerPlayer < Player
   end
 
   def assign_code
-    @code = COLOR_OPTIONS.sample(4)
+    COLOR_OPTIONS.sample(4)
   end
 
-  def game_won?(player, other_player)
-    player.guess == other_player.code
+  def game_won?(player, code)
+    player.guess == code
   end
 
   def make_guess
     @new_possibles.empty? ? @guess = %w[red red green green] : @guess = @new_possibles.sample
-  end
-
-  def computer_game_loop
-    assign_code
-    guess_number = 1
-    until game_won?(self)
-      make_guess
-      assign_matches(self, @matches, @code)
-      computer_guess
-      puts "Code: #{@code}"
-      puts "Guess #{guess_number}: #{@guess}"
-      clear_matches
-      guess_number += 1
-    end
+    puts "The computers guess is: | #{@guess[0]} | #{@guess[1]} | #{@guess[2]} | #{@guess[3]} |"
   end
 end
