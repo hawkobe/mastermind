@@ -1,4 +1,6 @@
 require_relative 'player'
+require 'pry-byebug'
+require 'colored'
 
 class HumanPlayer < Player
   COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
@@ -16,9 +18,10 @@ class HumanPlayer < Player
   end
 
   def place_guess
-    puts "Please select your guess from the colors: Red, Green, Blue, Yellow, Purple, and Cyan"
+    puts "Please select your guess from the colors: #{"Red".red}, #{"Green".green}, Blue, Yellow, Purple, and Cyan"
     puts "Time to guess! Your guess should be four colors, separated by spaces, with no punctuation:"
     @guess = gets.chomp.downcase.split
+    binding.pry
     until guess_valid?(guess)
       puts "Invalid guess, please select a valid guess:"
       @guess = gets.chomp.downcase.split
@@ -27,7 +30,7 @@ class HumanPlayer < Player
   end
 
   def guess_valid?(guess)
-    guess.all? { |color| COLOR_OPTIONS.any?(color) }
+    guess.all? { |color| COLOR_OPTIONS.any?(color) } && guess.count == 4
   end
 
   def code_valid?(code)

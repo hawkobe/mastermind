@@ -1,9 +1,11 @@
 require_relative 'human_player'
 require_relative 'computer_player'
 require_relative 'board'
+require_relative 'messages'
 require 'pry-byebug'
 
 class Game
+  include Message
   COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
   def initialize
     @board = Board.new
@@ -14,14 +16,14 @@ class Game
   end
 
   def setup
-    welcome_message
+    puts welcome_message
     create_players
     choose_guess_or_create
   end
 
   def play
     setup
-    if @guess_or_create == "guess"
+    if @guess_or_create == "break"
       breaker_message
       @code = @computer.assign_code
       player_guess_loop
@@ -33,11 +35,11 @@ class Game
   end
 
   def choose_guess_or_create
-    puts "Now decide whether you would like to guess the code or create the code."
-    puts "Type 'guess' to guess or 'code' to create the code:"
+    puts "Now decide whether you would like to BREAK the code or MAKE the code."
+    puts "Type 'break' to guess the code, or 'make' to create the code:"
     answer = gets.chomp
     until answer_valid?(answer)
-      puts "Invalid input. Remember, type 'guess' to guess or 'code' to create the code"
+      puts "Invalid input. Remember, type 'break' to guess, or 'make' to create the code"
       answer = gets.chomp
     end
     puts "Great! You've chosen to #{answer}. Let's begin!"
@@ -45,22 +47,7 @@ class Game
   end
 
   def answer_valid?(response)
-    response == "guess" || response == "code"
-  end
-
-  def welcome_message
-    puts "Welcome to Mastermind!\nYou will be competing against the computer to make and break codes!"
-    puts "If you are not familiar with the rules of Mastermind,"
-    puts "you can find the information here: https://en.wikipedia.org/wiki/Mastermind_(board_game)\n"
-  end
-
-  def breaker_message
-    puts "Alright, the computer will choose the code."
-    puts "You have 12 turns to break the code!"
-  end
-
-  def creator_message
-    puts "The computer will have 12 turns to break the code."
+    response == "break" || response == "make"
   end
 
   def display_matches
@@ -100,10 +87,6 @@ class Game
       @computer.clear_matches
       guess_number += 1
     end
-  end
-
-  def end_game
-    puts "You have guessed the code! YOU are the Mastermind!"
   end
 end
 
