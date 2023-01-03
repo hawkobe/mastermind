@@ -2,8 +2,7 @@ require_relative 'player'
 require 'pry-byebug'
 
 class ComputerPlayer < Player
-  COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
-
+  include GameLogic
   attr_reader :guess, :matches
   def initialize(name)
     super
@@ -13,6 +12,8 @@ class ComputerPlayer < Player
     @guess = nil
   end
 
+  # need to refactor logic here for elsif statement
+  
   def assign_matches(player, match_array, code_to_check)
     matched = []
     partially_matched = []
@@ -48,12 +49,8 @@ class ComputerPlayer < Player
     COLOR_OPTIONS.sample(4)
   end
 
-  def game_won?(player, code)
-    player.guess == code
-  end
-
   def make_guess
     @new_possibles.empty? ? @guess = %w[red red green green] : @guess = @new_possibles.sample
-    puts "The computers guess is: | #{@guess[0]} | #{@guess[1]} | #{@guess[2]} | #{@guess[3]} |"
+    puts "The computers guess is: | #{color(@guess[0])} | #{color(@guess[1])} | #{color(@guess[2])} | #{color(@guess[3])} |"
   end
 end

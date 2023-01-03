@@ -2,11 +2,12 @@ require_relative 'human_player'
 require_relative 'computer_player'
 require_relative 'board'
 require_relative 'messages'
+require_relative 'game_logic'
 require 'pry-byebug'
 
 class Game
   include Message
-  COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
+  include GameLogic
   def initialize
     @board = Board.new
     @human = nil
@@ -46,13 +47,9 @@ class Game
     @guess_or_create = answer
   end
 
-  def answer_valid?(response)
-    response == "break" || response == "make"
-  end
-
   def display_matches
-    puts "There were #{@computer.matches[0]} Exact Matches"
-    puts "There were #{@computer.matches[1]} Partial Matches"
+    puts "\nThere were #{@computer.matches[0]} #{"EXACT".bold} Matches"
+    puts "There were #{@computer.matches[1]} #{"PARTIAL".bold} Matches"
   end
 
   def create_players
@@ -67,7 +64,7 @@ class Game
       @computer.assign_matches(@human, @computer.matches, @code)
       display_matches
       @board.populate_matches_array(@computer.matches)
-      break end_game if @computer.game_won?(@human, @code)
+      break end_game if game_won?(@human, @code)
       @human.clear_guess
       @computer.clear_matches
       @board.display_board
@@ -76,11 +73,14 @@ class Game
 
   def computer_guess_loop
     guess_number = 1
-    until @computer.game_won?(@computer, @code)
-      print "Guess number #{guess_number}: "
+    until game_won?(@computer, @code)
+      computer_thinking(guess_number)
+      sleep(2)
+      print "\nGuess number #{guess_number}: "
       @computer.make_guess
       @board.push_guess(@computer.guess)
       @computer.assign_matches(@computer, @computer.matches, @code)
+      break end_game_computer if game_won?(@computer, @code)
       display_matches
       @board.populate_matches_array(@computer.matches)
       @computer.remove_possible_codes

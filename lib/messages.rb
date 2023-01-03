@@ -7,8 +7,8 @@ module Message
       but I will also explain the rules to you here.
 
       The game consists of two players:
-        - A code MAKER, and
-        - A code BREAKER
+        - A code #{"MAKER".red.bold.underlined}, and
+        - A code #{"BREAKER".red.bold.underlined}
       
       The code MAKER sets a 4 color code (from a selection pool of 6 colors),
       and the code BREAKER then has 12 turns to guess the code the MAKER has chosen.
@@ -23,22 +23,43 @@ module Message
           them a 'PARTIAL MATCH'
 
       FOR EXAMPLE:
-        If the maker's code was:    RED | GREEN | BLUE | YELLOW 
-        and the breaker guessed:    RED | PURPLE | BLUE | CYAN 
+        If the maker's code was:    #{"RED".red} | #{"GREEN".green} | #{"BLUE".blue} | #{"YELLOW".yellow} 
+        and the breaker guessed:    #{"RED".red} | #{"PURPLE".magenta} | #{"BLUE".blue} | #{"CYAN".cyan} 
         the maker would award the breaker 2 'exact matches' and NO 'partial matches':
-        1 exact for RED and 1 exact for BLUE with no partial matches for PURPLE or CYAN 
+        1 exact for #{"RED".red} and 1 exact for #{"BLUE".blue} with no partial matches for #{"PURPLE".magenta} or #{"CYAN".cyan} 
         
-        Or if the maker's code was: RED | GREEN | BLUE | YELLOW
-        and the breaker guessed:    RED | YELLOW | RED | PURPLE
+        Or if the maker's code was: #{"RED".red} | #{"GREEN".green} | #{"BLUE".blue} | #{"YELLOW".yellow}
+        and the breaker guessed:    #{"RED".red} | #{"YELLOW".yellow} | #{"RED".red} | #{"PURPLE".magenta}
         the maker would award the breaker 1 'exact match' and 1 'partial match'
-        1 exact for RED and 1 partial for YELLOW. As you can see, you don't recieve a partial match
-        for the second RED because the only RED in the code already hit an exact match.
+        1 exact for #{"RED".red} and 1 partial for #{"YELLOW".yellow}. As you can see, you don't recieve a partial match
+        for the second #{"RED".red} because the only #{"RED".red} in the code already hit an exact match.
 
       The play then continues for 12 rounds, or until the breaker correctly
       guesses the code, whichever comes first. Good luck!
 
       HEREDOC
 
+  end
+
+  def computer_thinking(round_number)
+    case round_number
+    when 1
+      puts
+      puts ["Okay let's give this a shot", "First guess is the hardest, only easier from here", "Let's hope you picked a hard one!"].sample
+    when 2..3
+      puts
+      puts ["Thinking..", "Let's try this!", "Hmmm...", "This oughta get me closer"].sample
+    when 4
+      puts
+      puts ["Okay I didn't think it would be this hard", "Getting closer...", "I've almost done it!"].sample
+    else
+      puts
+      puts ["Oof! Tough one!", "I can't believe I haven't gotten it yet!", "You're smart, for a human..."].sample
+    end
+  end
+
+  def end_game_computer
+    puts "I have broken your code, human! I never doubted myself for a second."
   end
 
   def breaker_message
@@ -50,7 +71,7 @@ module Message
     puts "The computer will have 12 turns to break the code."
   end
 
-  def end_game
+  def end_game_human
     puts "You have guessed the code! YOU are the Mastermind!"
   end
 end
