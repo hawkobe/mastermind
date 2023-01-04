@@ -3,7 +3,6 @@ require_relative 'computer_player'
 require_relative 'board'
 require_relative 'messages'
 require_relative 'game_logic'
-require 'pry-byebug'
 
 class Game
   include Message
@@ -108,7 +107,3 @@ class Game
     puts "The code was | #{color(@code[0])} | #{color(@code[1])} | #{color(@code[2])} | #{color(@code[3])} |"
   end
 end
-
-game = Game.new
-
-game.play
