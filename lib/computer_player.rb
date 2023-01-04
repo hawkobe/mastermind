@@ -4,6 +4,7 @@ require 'pry-byebug'
 class ComputerPlayer < Player
   include GameLogic
   attr_reader :guess, :matches
+
   def initialize(name)
     super
     @possible_combos = COLOR_OPTIONS.repeated_permutation(4).to_a
@@ -30,7 +31,7 @@ class ComputerPlayer < Player
   end
 
   def make_guess
-    @new_possibles.empty? ? @guess = %w[red red green green] : @guess = @new_possibles.sample
+    @guess = @new_possibles.empty? ? %w[red red green green] : @new_possibles.sample
     puts "The computers guess is: | #{color(@guess[0])} | #{color(@guess[1])} | #{color(@guess[2])} | #{color(@guess[3])} |"
   end
 end

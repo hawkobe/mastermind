@@ -24,7 +24,7 @@ class Game
 
   def play
     setup
-    if @guess_or_create == "break"
+    if @guess_or_create == 'break'
       breaker_message
       @code = @computer.assign_code
       player_guess_loop
@@ -33,10 +33,12 @@ class Game
       @code = @human.assign_code
       computer_guess_loop
     end
+    play_again_message
+    play_again?
   end
 
   def choose_guess_or_create
-    puts "Now decide whether you would like to BREAK the code or MAKE the code."
+    puts 'Now decide whether you would like to BREAK the code or MAKE the code.'
     puts "Type 'break' to guess the code, or 'make' to create the code:"
     answer = gets.chomp
     until answer_valid?(answer)
@@ -48,13 +50,13 @@ class Game
   end
 
   def display_matches
-    puts "\nThere were #{@computer.matches[0]} #{"EXACT".bold} Matches"
-    puts "There were #{@computer.matches[1]} #{"PARTIAL".bold} Matches"
+    puts "\nThere were #{@computer.matches[0]} #{'EXACT'.bold} Matches"
+    puts "There were #{@computer.matches[1]} #{'PARTIAL'.bold} Matches"
   end
 
   def create_players
     @human = HumanPlayer.create_player
-    @computer = ComputerPlayer.new("Computer")
+    @computer = ComputerPlayer.new('Computer')
   end
 
   def player_guess_loop
@@ -65,10 +67,13 @@ class Game
       display_matches
       @board.populate_matches_array(@computer.matches)
       break end_game_human if game_won?(@human, @code)
+
       @human.clear_guess
       @computer.clear_matches
       @board.display_board
     end
+    player_loss
+    print_code
   end
 
   def computer_guess_loop
@@ -81,12 +86,26 @@ class Game
       @board.push_guess(@computer.guess)
       assign_matches(@computer, @computer.matches, @code)
       break end_game_computer if game_won?(@computer, @code)
+
       display_matches
       @board.populate_matches_array(@computer.matches)
       @computer.remove_possible_codes
       @computer.clear_matches
       guess_number += 1
     end
+  end
+
+  def play_again?
+    replay = gets.chomp
+    return unless %w[y Y].include?(replay)
+
+    play
+  end
+
+  private
+
+  def print_code
+    puts "The code was | #{color(@code[0])} | #{color(@code[1])} | #{color(@code[2])} | #{color(@code[3])} |"
   end
 end
 

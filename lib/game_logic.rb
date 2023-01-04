@@ -1,5 +1,5 @@
 module GameLogic
-  COLOR_OPTIONS = ["red", "green", "blue", "yellow", "purple", "cyan"]
+  COLOR_OPTIONS = %w[red green blue yellow purple cyan]
 
   def guess_valid?(guess)
     guess.all? { |color| COLOR_OPTIONS.any?(color) } && guess.count == 4
@@ -10,7 +10,7 @@ module GameLogic
   end
 
   def answer_valid?(response)
-    response == "break" || response == "make"
+    %w[break make].include?(response)
   end
 
   def game_won?(player, code)
@@ -36,17 +36,17 @@ module GameLogic
 
   def color(color)
     case color
-    when "red"
+    when 'red'
       color.red
-    when "blue"
+    when 'blue'
       color.blue
-    when "green"
+    when 'green'
       color.green
-    when "yellow"
+    when 'yellow'
       color.yellow
-    when "purple"
+    when 'purple'
       color.magenta
-    when "cyan"
+    when 'cyan'
       color.cyan
     end
   end
