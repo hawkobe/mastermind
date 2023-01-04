@@ -61,10 +61,10 @@ class Game
     12.times do
       @human.place_guess
       @board.push_guess(@human.guess)
-      @computer.assign_matches(@human, @computer.matches, @code)
+      assign_matches(@human, @computer.matches, @code)
       display_matches
       @board.populate_matches_array(@computer.matches)
-      break end_game if game_won?(@human, @code)
+      break end_game_human if game_won?(@human, @code)
       @human.clear_guess
       @computer.clear_matches
       @board.display_board
@@ -79,7 +79,7 @@ class Game
       print "\nGuess number #{guess_number}: "
       @computer.make_guess
       @board.push_guess(@computer.guess)
-      @computer.assign_matches(@computer, @computer.matches, @code)
+      assign_matches(@computer, @computer.matches, @code)
       break end_game_computer if game_won?(@computer, @code)
       display_matches
       @board.populate_matches_array(@computer.matches)

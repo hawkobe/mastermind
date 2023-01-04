@@ -12,26 +12,6 @@ class ComputerPlayer < Player
     @guess = nil
   end
 
-  # need to refactor logic here for elsif statement
-  
-  def assign_matches(player, match_array, code_to_check)
-    matched = []
-    partially_matched = []
-    player.guess.each_with_index do |color, index|
-      if player.guess[index] == code_to_check[index]
-        match_array[0] += 1
-        matched.push(color)
-      elsif code_to_check.any?(color) && matched.count(color) != code_to_check.count(color) && partially_matched.count(color) != code_to_check.count(color)
-        match_array[1] += 1
-        partially_matched.push(color)
-      end
-
-      if (matched.count(color) == partially_matched.count(color)) && ((matched.count(color) + partially_matched.count(color)) > code_to_check.count(color))
-        match_array[1] -= 1
-      end
-    end
-  end
-
   def remove_possible_codes
     @new_possibles = @possible_combos.select do |combo|
       current_matches = [0, 0]
