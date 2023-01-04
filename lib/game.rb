@@ -59,6 +59,7 @@ class Game
   end
 
   def player_guess_loop
+    round_number = 1
     12.times do
       @human.place_guess
       @board.push_guess(@human.guess)
@@ -66,12 +67,12 @@ class Game
       display_matches
       @board.populate_matches_array(@computer.matches)
       break end_game_human if game_won?(@human, @code)
-
       @human.clear_guess
       @computer.clear_matches
       @board.display_board
+      round_number += 1
     end
-    player_loss
+    player_loss if round_number > 12
     print_code
   end
 
